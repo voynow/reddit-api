@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 import time
 
-import api_init
+from code import api_init
 
 headers = api_init.init()
 

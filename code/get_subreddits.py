@@ -1,7 +1,8 @@
-import api_init
 import requests
 import pandas as pd
 import time
+
+from code import api_init
 
 # API request vars
 headers = api_init.init() 
