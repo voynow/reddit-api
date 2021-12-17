@@ -26,4 +26,4 @@ for child in res.json()['data']['children']:
         ignore_index=True)
 
 # save to csv
-df.to_csv('subreddits.csv', index=False)
+df.to_csv('data/subreddits.csv', index=False)

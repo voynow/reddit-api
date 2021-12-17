@@ -25,4 +25,4 @@ for i in range(n_iter):
 
     time.sleep(1)
 
-df.to_csv('subreddit_posts.csv', index=False)
+df.to_csv('data/subreddit_posts.csv', index=False)
