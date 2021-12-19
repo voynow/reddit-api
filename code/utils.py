@@ -6,6 +6,10 @@ import time
 
 def api_init():
 
+    """
+    helper function for api initialization
+    """
+
     auth_json = json.load(open('auth_data.json'))
 
     CLIENT_ID = auth_json["CLIENT_ID"]
@@ -34,7 +38,11 @@ def api_init():
 
 
 def get_subreddits():
-        
+
+    """
+    creates csv of subreddit urls, subscriber count, and description 
+    """
+
     # API request vars
     headers = api_init() 
     subreddits_url = 'http://oauth.reddit.com/subreddits/'
@@ -61,6 +69,10 @@ def get_subreddits():
 
 
 def scrape_subreddit(name):
+
+    """
+    scrapes post data given subreddit name
+    """
 
     # api request vars
     headers = api_init()
@@ -94,7 +106,3 @@ def scrape_subreddit(name):
 
     # save data
     df.to_csv('data/subreddit_posts.csv', index=False)
-
-
-get_subreddits()
-scrape_subreddit("r/python")
