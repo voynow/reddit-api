@@ -10,7 +10,8 @@ def api_init():
     helper function for api initialization
     """
 
-    auth_json = json.load(open('auth_data.json'))
+    json_path = '../data/auth_data.json'
+    auth_json = json.load(open(json_path))
 
     CLIENT_ID = auth_json["CLIENT_ID"]
     SECRET_KEY = auth_json["SECRET_KEY"]
@@ -37,7 +38,7 @@ def api_init():
     return headers
 
 
-def get_subreddits():
+def get_subreddits(n_iter=1):
 
     """
     creates csv of subreddit urls, subscriber count, and description 
@@ -55,17 +56,24 @@ def get_subreddits():
     keys = ['url', 'subscribers', 'description']
     df = pd.DataFrame()
 
-    # iter over all child objects
-    for child in res.json()['data']['children']:
-        subreddit_dict = child['data']
+    for iter in range(n_iter):
+        # iter over all child objects
+        for child in res.json()['data']['children']:
 
-        # collect subreddit url, subs, and description
-        df = df.append(
-            {key : subreddit_dict[key] for key in keys}, 
-            ignore_index=True)
+            # collect subreddit url, subs, and description
+            df = df.append(
+                {key : child['data'][key] for key in keys}, 
+                ignore_index=True)
 
-    # save to csv
-    df.to_csv('data/subreddits.csv', index=False)
+        # get most recent item uid
+        uid = child['kind'] + child['data']['id']
+        params['after'] = uid
+
+        # wait to avoid api call limits
+        time.sleep(.1)
+
+    # return data
+    return df
 
 
 def scrape_subreddit(name):
@@ -102,7 +110,7 @@ def scrape_subreddit(name):
         params['after'] = uid
 
         # wait to avoid api call limits
-        time.sleep(1)
+        time.sleep(.1)
 
-    # save data
-    df.to_csv('data/subreddit_posts.csv', index=False)
+    # return data
+    return df
