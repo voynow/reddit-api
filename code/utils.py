@@ -10,7 +10,7 @@ def api_init():
     helper function for api initialization
     """
 
-    json_path = '../data/auth_data.json'
+    json_path = 'data/auth_data.json'
     auth_json = json.load(open(json_path))
 
     CLIENT_ID = auth_json["CLIENT_ID"]
@@ -38,7 +38,7 @@ def api_init():
     return headers
 
 
-def get_subreddits(n_iter=1):
+def get_subreddits():
 
     """
     creates csv of subreddit urls, subscriber count, and description 
@@ -56,21 +56,13 @@ def get_subreddits(n_iter=1):
     keys = ['url', 'subscribers', 'description']
     df = pd.DataFrame()
 
-    for iter in range(n_iter):
-        # iter over all child objects
-        for child in res.json()['data']['children']:
+    # iter over all child objects
+    for child in res.json()['data']['children']:
 
-            # collect subreddit url, subs, and description
-            df = df.append(
-                {key : child['data'][key] for key in keys}, 
-                ignore_index=True)
-
-        # get most recent item uid
-        uid = child['kind'] + child['data']['id']
-        params['after'] = uid
-
-        # wait to avoid api call limits
-        time.sleep(.1)
+        # collect subreddit url, subs, and description
+        df = df.append(
+            {key : child['data'][key] for key in keys}, 
+            ignore_index=True)
 
     # return data
     return df
